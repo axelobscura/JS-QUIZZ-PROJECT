@@ -1,33 +1,46 @@
+
+/*------------------------QUIZ CONTROLLER--------------------*/
 var quizController = (function () {
 
-    var private = 10;
-
-    var privateFn = function (a) {
-        return a + private
-    }
+    /*------------------------------QUESTION CONSTRUCTOR--------------------*/
+    function Question(id, questionText, options, correctAnswer) {
+        this.id = id;
+        this.questionText = questionText;
+        this.options = options;
+        this.correctAnswer = correctAnswer;
+    };
 
     return {
-        publicMethod: function () {
-            return privateFn(20)
+        addQuestionOnLocalStorage: function (newQuestionText, opts) {
+            console.log('Hi');
         }
     }
 
 })();
 
+/*------------------------UI CONTROLLER--------------------*/
 var UIController = (function () {
 
-    var num1 = 30;
+    var domItems = {
+        /*--------------------admin panel elements-------------------*/
+        questInsertBtn: document.getElementById("question-insert-btn"),
+        newQuestionText: document.getElementById("new-question-text"),
+        adminOptions: document.querySelectorAll("admin-options")
+    };
 
     return {
-        sum: function (num2) {
-            return num1 + num2;
-        }
+        getDomItems: domItems
     }
 
 })();
 
+/*------------------------CONTROLLER--------------------*/
 var controller = (function (quizCtrl, UiCtrl) {
 
-    console.log(UiCtrl.sum(200))
+    var selectedDomitems = UiCtrl.getDomItems;
+
+    selectedDomitems.questInsertBtn.addEventListener('click', function () {
+        quizCtrl.addQuestionOnLocalStorage(selectedDomitems.newQuestionText, selectedDomitems.adminOptions);
+    });
 
 })(quizController, UIController);
