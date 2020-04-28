@@ -12,7 +12,24 @@ var quizController = (function () {
 
     return {
         addQuestionOnLocalStorage: function (newQuestionText, opts) {
-            console.log('Hi');
+            var optionsArr, corrAns, questionId, newQuestion;
+
+            optionsArr = [];
+
+            questionId = 0;
+
+            for (var i = 0; i < opts.length; i++) {
+                if (opts[i].value !== "") {
+                    optionsArr.push(opts[i].value);
+                }
+                if (opts[i].previousElementSibling.checked && opts[i].value !== "") {
+                    corrAns = opts[i].value;
+                }
+            }
+
+            newQuestion = new Question(questionId, newQuestionText.value, optionsArr, corrAns);
+
+            console.log(newQuestion);
         }
     }
 
@@ -25,7 +42,7 @@ var UIController = (function () {
         /*--------------------admin panel elements-------------------*/
         questInsertBtn: document.getElementById("question-insert-btn"),
         newQuestionText: document.getElementById("new-question-text"),
-        adminOptions: document.querySelectorAll("admin-options")
+        adminOptions: document.querySelectorAll(".admin-option")
     };
 
     return {
