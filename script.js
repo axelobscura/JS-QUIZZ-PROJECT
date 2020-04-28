@@ -55,6 +55,13 @@ var quizController = (function () {
 
             questionLocalStorage.setQuestionCollection(getStoredQuests);
 
+            newQuestionText.value = "";
+
+            for (var x = 0; x < opts.length; x++) {
+                opts[x].value = "";
+                opts[x].previousElementSibling.checked = false;
+            }
+
             console.log(questionLocalStorage.getQuestionCollection());
         }
     }
