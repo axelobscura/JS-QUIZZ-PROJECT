@@ -10,13 +10,27 @@ var quizController = (function () {
         this.correctAnswer = correctAnswer;
     };
 
+    var questionLocalStorage = {
+        setQuestionCollection: function (newCollection) {
+            localStorage.setItem('questionCollection', JSON.stringify(newCollection));
+        },
+        getQuestionCollection: function () {
+            return JSON.parse(localStorage.getItem('questionCollection'));
+        },
+        removeQuestionCollection: function () {
+            localStorage.removeItem('questionCollection');
+        }
+    }
+
     return {
         addQuestionOnLocalStorage: function (newQuestionText, opts) {
-            var optionsArr, corrAns, questionId, newQuestion;
+            var optionsArr, corrAns, questionId, newQuestion, getStoredQuests;
+
+            if (questionLocalStorage.getQuestionCollection() === null) {
+                questionLocalStorage.setQuestionCollection([]);
+            }
 
             optionsArr = [];
-
-            questionId = 0;
 
             for (var i = 0; i < opts.length; i++) {
                 if (opts[i].value !== "") {
@@ -27,9 +41,21 @@ var quizController = (function () {
                 }
             }
 
+            if (questionLocalStorage.getQuestionCollection().length > 0) {
+                questionId = questionLocalStorage.getQuestionCollection()[questionLocalStorage.getQuestionCollection().length - 1].id + 1;
+            } else {
+                questionId = 0;
+            }
+
             newQuestion = new Question(questionId, newQuestionText.value, optionsArr, corrAns);
 
-            console.log(newQuestion);
+            getStoredQuests = questionLocalStorage.getQuestionCollection();
+
+            getStoredQuests.push(newQuestion);
+
+            questionLocalStorage.setQuestionCollection(getStoredQuests);
+
+            console.log(questionLocalStorage.getQuestionCollection());
         }
     }
 
