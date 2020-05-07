@@ -109,7 +109,9 @@ var UIController = (function () {
         adminOptionsContainer: document.querySelector(".admin-options-container"),
         insertedQuestionsWrapper: document.querySelector(".inserted-questions-wrapper"),
         questionUpdateBtn: document.getElementById("question-update-btn"),
-        questionDeleteBtn: document.getElementById("question-delete-btn")
+        questionDeleteBtn: document.getElementById("question-delete-btn"),
+        questionInsertBtn: document.getElementById("question-insert-btn"),
+        questsClearBtn: document.getElementById("questions-clear-btn")
     };
 
     return {
@@ -184,7 +186,54 @@ var UIController = (function () {
                 domItems.questionUpdateBtn.style.visibility = "visible";
                 domItems.questionDeleteBtn.style.visibility = "visible";
                 domItems.questionInsertBtn.style.visibility = "hidden";
+                domItems.questsClearBtn.style.pointerEvents = "none";
                 addInpsDynFn();
+
+
+                var updateQuestion = function () {
+                    var newOptions, optionEls;
+
+                    newOptions = [];
+
+                    optionEls = document.querySelectorAll(".admin-option");
+
+                    foundItem.questionText = domItems.newQuestionText.value;
+                    foundItem.correctAnswer = '';
+
+                    for (var i = 0; i < optionEls.length; i++) {
+                        if (optionEls[i] !== "") {
+                            newOptions.push(optionEls[i].value);
+                            if (optionEls[i].previousElementSibling.checked) {
+                                foundItem.correctAnswer = optionEls[i].value;
+                            }
+
+                        }
+                    }
+
+                    foundItem.options = newOptions;
+
+                    if (foundItem.questionText !== '') {
+                        if (foundItem.options.length > 1) {
+                            if (foundItem.correctAnswer !== "") {
+                                getStorageQuestionList.splice(placeInArr, 1, foundItem);
+
+                                storageQuestionList.setQuestionCollection(getStorageQuestionList);
+                            } else {
+                                alert('You missed to check the correct answer...')
+                            }
+
+                        } else {
+                            alert('You must insert at least 2 options...');
+                        }
+
+                    } else {
+                        alert('Please insert question');
+                    }
+
+
+                }
+
+                domItems.questionUpdateBtn.onclick = updateQuestion;
             }
 
 
