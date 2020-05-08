@@ -187,8 +187,26 @@ var UIController = (function () {
                 domItems.questionDeleteBtn.style.visibility = "visible";
                 domItems.questionInsertBtn.style.visibility = "hidden";
                 domItems.questsClearBtn.style.pointerEvents = "none";
+
                 addInpsDynFn();
 
+                var backDefaultView = function () {
+                    var updatedOtions;
+                    domItems.newQuestionText.value = '';
+                    updatedOtions = document.querySelectorAll(".admin-option");
+
+                    for (var i = 0; i < updatedOtions.length; i++) {
+                        updatedOtions[i].value = "";
+                        updatedOtions[i].previousElementSibling.checked = false;
+                    }
+
+                    domItems.questionUpdateBtn.style.visibility = "hidden";
+                    domItems.questionDeleteBtn.style.visibility = "hidden";
+                    domItems.questionInsertBtn.style.visibility = "visible";
+                    domItems.questsClearBtn.style.pointerEvents = "";
+
+                    updateQuestionFn(storageQuestionList);
+                }
 
                 var updateQuestion = function () {
                     var newOptions, optionEls;
@@ -219,19 +237,7 @@ var UIController = (function () {
 
                                 storageQuestionList.setQuestionCollection(getStorageQuestionList);
 
-                                domItems.newQuestionText.value = '';
-
-                                for (var i = 0; i < optionEls.length; i++) {
-                                    optionEls[i].value = "";
-                                    optionEls[i].previousElementSibling.checked = false;
-                                }
-
-                                domItems.questionUpdateBtn.style.visibility = "hidden";
-                                domItems.questionDeleteBtn.style.visibility = "hidden";
-                                domItems.questionInsertBtn.style.visibility = "visible";
-                                domItems.questsClearBtn.style.pointerEvents = "";
-
-                                updateQuestionFn(storageQuestionList);
+                                backDefaultView();
 
                             } else {
                                 alert('You missed to check the correct answer...')
@@ -249,6 +255,19 @@ var UIController = (function () {
                 }
 
                 domItems.questionUpdateBtn.onclick = updateQuestion;
+
+
+                var deleteQuestion = function () {
+
+                    getStorageQuestionList.splice(placeInArr, 1);
+
+                    storageQuestionList.setQuestionCollection(getStorageQuestionList);
+
+                    backDefaultView();
+
+                }
+
+                domItems.questionDeleteBtn.onclick = deleteQuestion;
             }
 
 
