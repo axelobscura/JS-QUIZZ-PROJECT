@@ -131,7 +131,11 @@ var UIController = (function () {
         askedQuestionText: document.getElementById("asked-question-text"),
         quizOptionsWrapper: document.querySelector(".quiz-options-wrapper"),
         progressBar: document.querySelector("progress"),
-        progressPar: document.getElementById("progress")
+        progressPar: document.getElementById("progress"),
+        instantAnswerContainer: document.querySelector(".instant-answer-container"),
+        instantAnswerText: document.getElementById("instant-answer-text"),
+        instantAnswerWrapper: document.getElementById("instant-answer-wrapper"),
+        emotionIcon: document.getElementById("emotion")
     };
 
     return {
@@ -334,6 +338,32 @@ var UIController = (function () {
 
             domItems.progressPar.textContent = (progress.questionIndex + 1) + '/' + storageQuestionList.getQuestionCollection().length;
 
+        },
+
+        newDesign: function (ansResult, selectedAnswer) {
+
+            var twoOptions, index;
+
+            index = 0;
+
+            if (ansResult) {
+                index = 1;
+            }
+
+            twoOptions = {
+                instantAnswerText: ['This is a wrong answer!!!', 'This is the correct answer!!!'],
+                instantAnswerClass: ['red', 'green'],
+                emotionType: ['images/sad.png', 'images/happy.png'],
+                optionSpanBg: ['rgba(200, 0, 0, .7)', 'rgba(0, 250, 0, .2)']
+            };
+
+            domItems.quizOptionsWrapper.style.cssText = "opacity: 0.6; pointer-events: none";
+            domItems.instantAnswerContainer.style.opacity = "1";
+            domItems.instantAnswerText.textContent = twoOptions.instantAnswerText[index];
+            domItems.instantAnswerWrapper.className = twoOptions.instantAnswerClass[index];
+            domItems.emotionIcon.setAttribute('src', twoOptions.emotionType[index]);
+
+            selectedAnswer.previousElementSibling.style.backgroundColor = twoOptions.optionSpanBg[index];
         }
 
     }
@@ -379,7 +409,9 @@ var controller = (function (quizCtrl, UiCtrl) {
 
                 var answer = document.querySelector('.quiz-options-wrapper div p.' + e.target.className);
 
-                quizCtrl.checkAnswer(answer);
+                var answerResult = quizCtrl.checkAnswer(answer);
+
+                UiCtrl.newDesign(answerResult, answer);
 
             }
         }
