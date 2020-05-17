@@ -107,7 +107,11 @@ var quizController = (function () {
             } else {
                 return false;
             }
-        }
+        },
+
+        isFinished: function () {
+            return quizProgress.questionIndex + 1 === questionLocalStorage.getQuestionCollection().length;
+        },
 
     };
 
@@ -135,7 +139,8 @@ var UIController = (function () {
         instantAnswerContainer: document.querySelector(".instant-answer-container"),
         instantAnswerText: document.getElementById("instant-answer-text"),
         instantAnswerWrapper: document.getElementById("instant-answer-wrapper"),
-        emotionIcon: document.getElementById("emotion")
+        emotionIcon: document.getElementById("emotion"),
+        nextQuestionBtn: document.getElementById("next-question-btn")
     };
 
     return {
@@ -364,6 +369,13 @@ var UIController = (function () {
             domItems.emotionIcon.setAttribute('src', twoOptions.emotionType[index]);
 
             selectedAnswer.previousElementSibling.style.backgroundColor = twoOptions.optionSpanBg[index];
+        },
+
+
+
+        resetDesign: function () {
+            domItems.quizOptionsWrapper.style.cssText = "";
+            domItems.instantAnswerContainer.style.opacity = "0";
         }
 
     }
@@ -412,6 +424,28 @@ var controller = (function (quizCtrl, UiCtrl) {
                 var answerResult = quizCtrl.checkAnswer(answer);
 
                 UiCtrl.newDesign(answerResult, answer);
+
+                if (quizCtrl.isFinished()) {
+                    selectedDomitems.nextQuestionBtn.textContent = "Finished";
+                }
+
+                var nextQuestion = function (questData, progress) {
+                    if (quizCtrl.isFinished()) {
+                        console.log('isFinished');
+                    } else {
+                        UiCtrl.resetDesign();
+                        quizCtrl.getQuizProgress.questionIndex++;
+                        UiCtrl.displayQuestion(quizCtrl.getQuestionLocalStorage, quizCtrl.getQuizProgress);
+                        UiCtrl.displayProgress(quizCtrl.getQuestionLocalStorage, quizCtrl.getQuizProgress);
+                    }
+                }
+
+                selectedDomitems.nextQuestionBtn.onclick = function () {
+
+                    console.log('hola');
+
+                    nextQuestion(quizCtrl.getQuestionLocalStorage, quizCtrl.getQuizProgress);
+                }
 
             }
         }
