@@ -30,6 +30,35 @@ var quizController = (function () {
         questionIndex: 0
     }
 
+    //------------------PERSON CONSTRUCTOR-------------------//
+    function Person(id, firstname, lastname, score) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.score = score;
+    };
+
+    var currPersonData = {
+        fullname: ["Nick", "Dorr"],
+        score: 0
+    }
+
+    var personLocalStorage = {
+        setPersonData: function (newPersonData) {
+            localStorage.setItem('personData', JSON.stringify(newPersonData));
+        },
+        getPersonData: function () {
+            return JSON.parse(localStorage.getItem('personData'));
+        },
+        removePersonData: function () {
+            localStorage.removeItem('personData');
+        }
+    };
+
+    if (personLocalStorage.getPersonData() === null) {
+        personLocalStorage.setPersonData([]);
+    }
+
     return {
 
         getQuizProgress: quizProgress,
@@ -112,6 +141,26 @@ var quizController = (function () {
         isFinished: function () {
             return quizProgress.questionIndex + 1 === questionLocalStorage.getQuestionCollection().length;
         },
+
+        addPerson: function () {
+            var newPerson, personId, personData;
+
+            if (personLocalStorage.getPersonData().length > 0) {
+                personId = personLocalStorage.getPersonData()[personLocalStorage.getPersonData().length - 1].id + 1;
+            } else {
+                personId = 0;
+            }
+
+            newPerson = new Person(personId, currPersonData.fullname[0], currPersonData.fullname[1], currPersonData.score);
+
+            personData = personLocalStorage.getPersonData();
+
+            personData.push(newPerson);
+
+            personLocalStorage.setPersonData(personData);
+
+            console.log(newPerson);
+        }
 
     };
 
@@ -431,6 +480,7 @@ var controller = (function (quizCtrl, UiCtrl) {
 
                 var nextQuestion = function (questData, progress) {
                     if (quizCtrl.isFinished()) {
+                        quizCtrl.addPerson();
                         console.log('isFinished');
                     } else {
                         UiCtrl.resetDesign();
