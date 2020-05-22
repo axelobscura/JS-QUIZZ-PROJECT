@@ -498,25 +498,31 @@ var UIController = (function () {
 
         deleteResult: function (event, userData) {
             var getId, personsArr;
-
             personsArr = userData.getPersonData();
-
             if ('delete-result-btn_'.indexOf(event.target.id)) {
-
                 getId = parseInt(event.target.id.split('_')[1]);
-
                 for (var i = 0; i < personsArr.length; i++) {
-
                     if (personsArr[i].id === getId) {
                         personsArr.splice(i, 1);
                         userData.setPersonData(personsArr);
                     }
-
-
                 }
-
             }
+        },
 
+        clearResultList: function (userData) {
+            var conf;
+            if (userData.getPersonData() !== null) {
+                if (userData.getPersonData().length > 0) {
+                    conf = confirm('Warning you will loose entire result list');
+
+                    if (conf) {
+                        userData.removePersonData();
+
+                        domItems.resultsListWrapper.innerHTML = "";
+                    }
+                }
+            }
         }
 
     }
@@ -615,5 +621,9 @@ var controller = (function (quizCtrl, UiCtrl) {
         UiCtrl.deleteResult(e, quizCtrl.getPersonLocalStorage);
         UIController.addResultOnPanel(quizCtrl.getPersonLocalStorage);
     });
+
+    selectedDomitems.clearResultsBtn.addEventListener('click', function () {
+        UiCtrl.clearResultList(quizCtrl.getPersonLocalStorage);
+    })
 
 })(quizController, UIController);
