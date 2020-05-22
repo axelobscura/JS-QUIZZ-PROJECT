@@ -167,7 +167,9 @@ var quizController = (function () {
 
         getCurrPersonData: currPersonData,
 
-        getAdminFullName: adminFullName
+        getAdminFullName: adminFullName,
+
+        getPersonLocalStorage: personLocalStorage
 
     };
 
@@ -188,6 +190,7 @@ var UIController = (function () {
         questionDeleteBtn: document.getElementById("question-delete-btn"),
         questionInsertBtn: document.getElementById("question-insert-btn"),
         questsClearBtn: document.getElementById("questions-clear-btn"),
+        resultsListWrapper: document.querySelector(".results-list-wrapper"),
         //-------------select elements from quiz section-----------------/
         quizSection: document.querySelector(".quiz-container"),
         askedQuestionText: document.getElementById("asked-question-text"),
@@ -480,6 +483,20 @@ var UIController = (function () {
 
             domItems.finalResultSection.style.display = 'block';
 
+        },
+
+        addResultOnPanel: function (userData) {
+            var resultHTML;
+
+            domItems.resultsListWrapper.innerHTML = "";
+
+            for (var i = 0; i < userData.getPersonData().length; i++) {
+                resultHTML = `<p class="person person-${i}"><span class="person-${i}">${userData.getPersonData()[i].firstname} ${userData.getPersonData()[i].lastname} - ${userData.getPersonData()[i].score} Points</span><button id="delete-result-btn_${userData.getPersonData()[i].id}" class="delete-result-btn">Delete</button></p>`;
+
+                domItems.resultsListWrapper.insertAdjacentHTML('afterbegin', resultHTML);
+            };
+
+
         }
 
     }
@@ -570,6 +587,8 @@ var controller = (function (quizCtrl, UiCtrl) {
                 UiCtrl.getFullName(quizCtrl.getCurrPersonData, quizCtrl.getQuestionLocalStorage, quizCtrl.getAdminFullName);
             }
         })
-    })
+    });
+
+    UIController.addResultOnPanel(quizCtrl.getPersonLocalStorage);
 
 })(quizController, UIController);
