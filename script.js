@@ -487,15 +487,34 @@ var UIController = (function () {
 
         addResultOnPanel: function (userData) {
             var resultHTML;
-
             domItems.resultsListWrapper.innerHTML = "";
-
             for (var i = 0; i < userData.getPersonData().length; i++) {
                 resultHTML = `<p class="person person-${i}"><span class="person-${i}">${userData.getPersonData()[i].firstname} ${userData.getPersonData()[i].lastname} - ${userData.getPersonData()[i].score} Points</span><button id="delete-result-btn_${userData.getPersonData()[i].id}" class="delete-result-btn">Delete</button></p>`;
 
                 domItems.resultsListWrapper.insertAdjacentHTML('afterbegin', resultHTML);
             };
+        },
 
+        deleteResult: function (event, userData) {
+            var getId, personsArr;
+
+            personsArr = userData.getPersonData();
+
+            if ('delete-result-btn_'.indexOf(event.target.id)) {
+
+                getId = parseInt(event.target.id.split('_')[1]);
+
+                for (var i = 0; i < personsArr.length; i++) {
+
+                    if (personsArr[i].id === getId) {
+                        personsArr.splice(i, 1);
+                        userData.setPersonData(personsArr);
+                    }
+
+
+                }
+
+            }
 
         }
 
@@ -590,5 +609,10 @@ var controller = (function (quizCtrl, UiCtrl) {
     });
 
     UIController.addResultOnPanel(quizCtrl.getPersonLocalStorage);
+
+    selectedDomitems.resultsListWrapper.addEventListener('click', function (e) {
+        UiCtrl.deleteResult(e, quizCtrl.getPersonLocalStorage);
+        UIController.addResultOnPanel(quizCtrl.getPersonLocalStorage);
+    });
 
 })(quizController, UIController);
