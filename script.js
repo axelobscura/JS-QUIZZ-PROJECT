@@ -191,6 +191,7 @@ var UIController = (function () {
         questionInsertBtn: document.getElementById("question-insert-btn"),
         questsClearBtn: document.getElementById("questions-clear-btn"),
         resultsListWrapper: document.querySelector(".results-list-wrapper"),
+        clearResultsBtn: document.getElementById("results-clear-btn"),
         //-------------select elements from quiz section-----------------/
         quizSection: document.querySelector(".quiz-container"),
         askedQuestionText: document.getElementById("asked-question-text"),
